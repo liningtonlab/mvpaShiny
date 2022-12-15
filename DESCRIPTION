@@ -1,0 +1,45 @@
+Type: Package
+Package: mvpaShiny
+Title: Shiny app for mvpa (multivariate pattern analysis)
+Version: 0.0.0.9000
+Authors@R: 
+    c(person(given = "Baumeister",
+             family = "Tim",
+             role = c("cre", "aut"),
+             email = "Tim.Baumeister@gmx.de",
+             comment = c(ORCID = "0000-0002-8057-7066")),
+      person(given = "Kvalheim",
+             family = "Olav",
+             role = "aut",
+             email = "Olav.Kvalheim@uib.no",
+             comment = c(ORCID = "0000-0001-9432-8776")))
+Description: Build validated Projection to Latent Structures regression
+    (PLS-R) models through Monte Carlo resampling. Identify important
+    explanatory variables / features, using the Target Projection on the
+    validated PLS-R model. Perform covariate projection to interpret the
+    influence of potential covariates on a response value.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+Imports: 
+    dplyr,
+    DT,
+    magrittr,
+    plotly,
+    shiny,
+    shinyvalidate,
+    tidyr,
+    vroom,
+    withr,
+    rlang,
+    tibble,
+    stringr,
+    shinyjs,
+    utils,
+    tools,
+    readxl,
+    clipr,
+    openxlsx,
+    fontawesome (>= 0.3.0)
