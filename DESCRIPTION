@@ -22,7 +22,7 @@ License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports: 
     dplyr,
     DT,
@@ -42,4 +42,5 @@ Imports:
     readxl,
     clipr,
     openxlsx,
-    fontawesome (>= 0.3.0)
+    fontawesome (>= 0.3.0),
+    purrr

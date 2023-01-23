@@ -510,7 +510,7 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
 
                                DT::renderDT({
 
-                                   DT::datatable(adjust_decimals(data, ignore_column = 'Variable'),
+                                   DT::datatable(adjust_decimals(data),
                                                  extensions = c("Scroller"),
                                                  options = list(scrollY = 450,
                                                                 scrollX = 500,

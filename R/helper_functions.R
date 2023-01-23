@@ -50,8 +50,8 @@ adjust_decimals <- function(data, decimals = 3) {
     non_numeric_cols <- data %>% dplyr::select_if(purrr::negate(is.numeric)) %>% colnames()
     if (!identical(non_numeric_cols, character(0))) {
         original_order <- colnames(data)
-        string_part <- data[, ignore_column, drop=FALSE]
-        numeric_part <- data[, !(colnames(data) %in% c(ignore_column))]
+        string_part <- data[, non_numeric_cols, drop=FALSE]
+        numeric_part <- data[, !(colnames(data) %in% c(non_numeric_cols))]
         numeric_part <- adjust_decimals(numeric_part)
         data <- cbind(string_part, numeric_part)
         return(data[original_order])

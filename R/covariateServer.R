@@ -190,8 +190,7 @@ covariateServer <- function (id, valid_datasets, selected_valid_dataset, file_fo
             if (isolate(input$df_switch)) {
                 output$explained_var_df <- DT::renderDT({
 
-                    DT::datatable(adjust_decimals(covariate$covariate_proj_result$explained_variance_by_covariates,
-                                                  ignore_column = 'covariate'),
+                    DT::datatable(adjust_decimals(covariate$covariate_proj_result$explained_variance_by_covariates),
                                   extensions = c("Scroller"),
                                   options = list(scrollY = 250,
                                                  scrollX = 500,
