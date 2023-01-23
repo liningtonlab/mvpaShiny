@@ -46,8 +46,9 @@ get_selected_dataset <- function(selected_dataset, valid_datasets) {
 
 
 # Trim dataframes for plotting
-adjust_decimals <- function(data, decimals = 3, ignore_column = NULL) {
-    if (!is.null(ignore_column)) {
+adjust_decimals <- function(data, decimals = 3) {
+    non_numeric_cols <- data %>% dplyr::select_if(purrr::negate(is.numeric)) %>% colnames()
+    if (!identical(non_numeric_cols, character(0))) {
         original_order <- colnames(data)
         string_part <- data[, ignore_column, drop=FALSE]
         numeric_part <- data[, !(colnames(data) %in% c(ignore_column))]
