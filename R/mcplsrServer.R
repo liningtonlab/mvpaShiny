@@ -241,7 +241,7 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
                                         label = "Switch plots",
                                         choices = c("Fraction distribution plot" = "fd_plot",
                                                     "Classic view" = "classic"),
-                                        selected = "fd_plot")
+                                        selected = "classic")
 
                            ),
 
@@ -381,6 +381,7 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
                                        label = "Confidence limits",
                                        min = 0,
                                        max = 100,
+                                       step = 0.1,
                                        value = c(2.5, 97.5),
                                        post = "%"),
 
@@ -752,6 +753,8 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
                 return()
             }
             if (is.null(input$tp_validated_switch)) return()
+
+            if (mcplsr$results$A_optimal == 0) return()
 
             if (input$tp_validated_switch) {
                 data <- mcplsr[["results"]][["target_projection_A_opt"]][[mcplsr$tp_validated_val_type]]

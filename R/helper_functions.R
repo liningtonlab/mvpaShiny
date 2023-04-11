@@ -47,6 +47,7 @@ get_selected_dataset <- function(selected_dataset, valid_datasets) {
 
 # Trim dataframes for plotting
 adjust_decimals <- function(data, decimals = 3) {
+    data <- as.data.frame(data)
     non_numeric_cols <- data %>% dplyr::select_if(purrr::negate(is.numeric)) %>% colnames()
     if (!identical(non_numeric_cols, character(0))) {
         original_order <- colnames(data)
