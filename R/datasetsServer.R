@@ -1091,6 +1091,13 @@ datasetsServer <- function(id, update_current_data, enhance_current_data, file_f
             } else {
                 selection <- input$selected_valid_dataset
                 if (selection != ""){
+
+                    # Edge case where valid dataset gets deleted
+                    if (is.null(datasets[["valid_datasets"]][[selection]][["dataset"]])) {
+                        output$stats_output <- renderUI({})
+                        return()
+                    }
+
                     datasets$stats <- t(mvpa::data_summary(datasets[["valid_datasets"]][[selection]][["dataset"]]))
                     output$stats_output <- renderUI({
                         tagList(
