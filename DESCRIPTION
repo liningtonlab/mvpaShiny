@@ -43,4 +43,7 @@ Imports:
     clipr,
     openxlsx,
     fontawesome (>= 0.3.0),
-    purrr
+    purrr,
+    mvpa
+Remotes:
+    liningtonlab/mvpa
