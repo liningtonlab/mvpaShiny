@@ -377,13 +377,13 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
 
                     column(width = 4,
 
-                           sliderInput(inputId = NS(id, "cl_range_repeated"),
-                                       label = "Confidence limits",
+                           shinyWidgets::numericRangeInput(inputId = NS(id, "cl_range_repeated"),
+                                       label = "Confidence limits (%)",
                                        min = 0,
                                        max = 100,
                                        step = 0.1,
-                                       value = c(2.5, 97.5),
-                                       post = "%"),
+                                       value = c(2.5, 97.5)
+                                       ),
 
                            sliderInput(inputId = NS(id, "rel_font_size_repeated"),
                                        label = "Change font size",
