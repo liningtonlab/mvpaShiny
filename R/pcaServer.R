@@ -73,23 +73,27 @@ pcaServer <- function(id, valid_datasets, selected_valid_dataset, current_data_o
 
         #
 
-        # Scree plot + options (use half of the number of )
+        # Scree plot + options
         observeEvent(input$apply_pca, {
 
             if (is.null(pca$pca_result)) return()
 
+            pcs <- colnames(pca$pca_result$scores)
+
             pcs_to_plot <- ifelse(trunc(length(pca$pca_result$explained_variance)) > 10,
-                                  10,
-                                  length(pca$pca_result$explained_variance))
+                                  "PC10",
+                                  tail(pcs, n=1))
 
             output$scree_plot_options <- renderUI({
 
                 tagList(
                         column(width = 12,
 
-                               numericInput(inputId = NS(id, "pc_count"),
-                                            label = "Select number of principal components",
-                                            value = pcs_to_plot),
+                               selectInput(inputId = NS(id, "pc_count"),
+                                           label = "Select number of principal components",
+                                           choices = pcs,
+                                           selected = pcs_to_plot,
+                                           multiple = FALSE),
 
                                checkboxInput(inputId = NS(id, "add_cumulative_perc"),
                                              label = "Add cumulative percentage",
@@ -130,9 +134,9 @@ pcaServer <- function(id, valid_datasets, selected_valid_dataset, current_data_o
                     filename <- paste(isolate(pca$pca_result$dataset_name), "Scree-plot", Sys.Date(), sep = "_")
 
                     fig <- mvpa::plot_scree_plot(pca_result = pca$pca_result,
-                                                     how_many_PCs = input$pc_count,
-                                                     add_cumulative_perc = input$add_cumulative_perc,
-                                                     rel_font_size = input$rel_font_size)
+                                                 how_many_PCs = get_pc_numeric(input$pc_count),
+                                                 add_cumulative_perc = input$add_cumulative_perc,
+                                                 rel_font_size = input$rel_font_size)
 
                     plotly_helper(fig, filename)
 
@@ -146,7 +150,6 @@ pcaServer <- function(id, valid_datasets, selected_valid_dataset, current_data_o
 
             if (is.null(pca$pca_result)) return()
 
-
             pcs <- colnames(pca$pca_result$scores)
 
             output$scores_plot_options <- renderUI({
@@ -154,13 +157,19 @@ pcaServer <- function(id, valid_datasets, selected_valid_dataset, current_data_o
                 tagList(
                     column(width = 4,
 
-                           numericInput(inputId = NS(id, "pc_x_axis"),
-                                        label = "Select principal component (x axis)",
-                                        value = 1),
+                           selectInput(inputId = NS(id, "pc_x_axis"),
+                                       label = "Select principal component (x axis)",
+                                       selected = "PC1",
+                                       choices = pcs,
+                                       multiple = FALSE,
+                                       ),
 
-                           numericInput(inputId = NS(id, "pc_y_axis"),
+                           selectInput(inputId = NS(id, "pc_y_axis"),
                                         label = "Select principal component (y axis)",
-                                        value = 2),
+                                        selected = "PC2",
+                                        choices = pcs,
+                                        multiple = FALSE,
+                                        ),
                      ),
 
                     column(width = 4,
@@ -260,7 +269,7 @@ pcaServer <- function(id, valid_datasets, selected_valid_dataset, current_data_o
 
                     fig <- mvpa::plot_pca_2d(pca_result = pca$pca_result,
                                              plot = "scores",
-                                             PCs_to_plot = c(input$pc_x_axis, input$pc_y_axis),
+                                             PCs_to_plot = c(get_pc_numeric(input$pc_x_axis), get_pc_numeric(input$pc_y_axis)),
                                              rel_font_size = input$rel_font_size,
                                              rel_point_size = input$rel_point_size)
 
@@ -348,18 +357,24 @@ pcaServer <- function(id, valid_datasets, selected_valid_dataset, current_data_o
 
             if (is.null(pca$pca_result)) return()
 
+            pcs <- colnames(pca$pca_result$scores)
+
             output$loadings_plot_options <- renderUI({
 
                 tagList(
                     column(width = 4,
 
-                           numericInput(inputId = NS(id, "pc_x_axis_loadings"),
-                                        label = "Select principal component (x axis)",
-                                        value = 1),
+                           selectInput(inputId = NS(id, "pc_x_axis_loadings"),
+                                       label = "Select principal component (x axis)",
+                                       selected = "PC1",
+                                       choices = pcs,
+                                       multiple = FALSE),
 
-                           numericInput(inputId = NS(id, "pc_y_axis_loadings"),
-                                        label = "Select principal component (y axis)",
-                                        value = 2),
+                           selectInput(inputId = NS(id, "pc_y_axis_loadings"),
+                                       label = "Select principal component (y axis)",
+                                       selected = "PC2",
+                                       choices = pcs,
+                                       multiple = FALSE),
                     ),
 
                     column(width = 4,
@@ -416,7 +431,7 @@ pcaServer <- function(id, valid_datasets, selected_valid_dataset, current_data_o
 
                     fig <- mvpa::plot_pca_2d(pca_result = pca$pca_result,
                                              plot = "loadings",
-                                             PCs_to_plot = c(input$pc_x_axis_loadings, input$pc_y_axis_loadings),
+                                             PCs_to_plot = c(get_pc_numeric(input$pc_x_axis_loadings), get_pc_numeric(input$pc_y_axis_loadings)),
                                              rel_font_size = input$rel_font_size,
                                              rel_point_size = input$rel_point_size_loadings)
 
@@ -619,6 +634,7 @@ pcaServer <- function(id, valid_datasets, selected_valid_dataset, current_data_o
 
         })
 
+
         # Download & copy loadings
         output$download_var_variation <- downloadHandler(
             filename = function() {
@@ -645,7 +661,109 @@ pcaServer <- function(id, valid_datasets, selected_valid_dataset, current_data_o
             }
         })
 
+        # PCA value bar plot
+
+        # options
+        observeEvent(input$apply_pca, {
+
+            if (is.null(pca$pca_result)) return()
+
+            pcs <- colnames(pca$pca_result$scores)
+
+            data <- pca$pca_result$loadings
+            min_y <- floor(min(data[,"PC1"]))
+            max_y <- ceiling(max(data[,"PC1"]))
+            x_vals <- rownames(data)
+
+                output$pca_value_plot_options <- renderUI({
+
+                    tagList(
+                        column(width = 4,
+
+                               radioButtons(inputId = NS(id, "pca_value_type"),
+                                            label = "Choose PCA value type",
+                                            inline = FALSE,
+                                            choiceNames = list(HTML("<b>Loadings</b>"),
+                                                               HTML("<b>Scores</b>")),
+                                                               choiceValues = c("loadings",
+                                                                                "scores"),
+                                                               selected = "loadings"),
+
+                               selectInput(inputId = NS(id, "pc_select_value_plot"),
+                                           label = "Select principal component",
+                                           choices = pcs,
+                                           multiple = FALSE),
+
+                        ),
+
+                        column(width = 4,
+
+                               selectizeInput(inputId = NS(id, "x_filter_pca_value_plot"),
+                                              label = "Select X-axis variables",
+                                              choices = x_vals,
+                                              multiple = TRUE),
+
+                               sliderInput(inputId = NS(id, "y_filter_pca_value_plot"),
+                                           label = "Trim PCA value",
+                                           min = min_y,
+                                           max = max_y,
+                                           step = 0.05,
+                                           value = c(min_y, max_y))
+
+                        ),
+
+                        column(width = 4,
+
+                               sliderInput(inputId = NS(id, "rel_font_size_pca_value_plot"),
+                                           label = "Change font size",
+                                           min = 1,
+                                           max = 3,
+                                           value = 1,
+                                           step = .1),
+
+                               checkboxInput(inputId = NS(id, "rotate_pca_value_plot"),
+                                             label = "Rotate plot",
+                                             FALSE)
+                        ),
+
+                        br(),
+
+                        uiOutput(NS(id, "df_pca_value_plot_output"))
+                    )
+                })
+
+        })
+
+        # plot
+        observe({
+            if (is.null(pca$pca_result)) return()
+
+            if (is.null(input$pc_select_value_plot)) return()
+
+            output$pca_value_plot <- plotly::renderPlotly({
+
+                    filename = paste(isolate(pca$pca_result$dataset_name),
+                                     "PCA",
+                                     isolate(input$pca_value_type),
+                                     isolate(input$pc_select_value_plot),
+                                     Sys.Date(),
+                                     sep = "_")
+
+                    fig <- mvpa::plot_pca_value(pca_result = pca$pca_result,
+                                                PC_to_plot = get_pc_numeric(input$pc_select_value_plot),
+                                                plot = input$pca_value_type,
+                                                x_filter = input$x_filter_pca_value_plot,
+                                                rel_font_size = input$rel_font_size_pca_value_plot,
+                                                rotate = input$rotate_pca_value_plot)
+
+                    plotly_helper(fig,filename)
+
+                })
+
+        })
+
         pca
 
     })
+
 }

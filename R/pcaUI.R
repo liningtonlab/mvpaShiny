@@ -84,6 +84,19 @@ pcaUI <- function(id) {
 
                                            ),
 
+                                  tabPanel(title = "PCA values bar plot",
+
+                                           plotly::plotlyOutput(outputId = NS(id, "pca_value_plot"),
+                                                                width = "100%",
+                                                                height = "100%"
+                                                                ),
+
+                                           hr(),
+
+                                           uiOutput(outputId = NS(id, "pca_value_plot_options"))
+
+                                           ),
+
                                   tabPanel(title = "Variable variation plot",
 
                                            plotly::plotlyOutput(outputId = NS(id, "var_variation_plot"),

@@ -196,8 +196,7 @@ datasetsUI <- function(id) {
 
                          div(style = "display:inline-block;",
                              actionButton(inputId = NS(id, "add_valid_df"),
-                                          label = "Verify and store current dataset",
-                                          style = 'margin-bottom:25px')),
+                                          label = "Verify and store current dataset")),
 
                          hr(style = "margin-top:5px; margin-bottom:5px"),
 

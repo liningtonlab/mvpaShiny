@@ -40,7 +40,7 @@ mvpaApp <- function(run_in_browser = TRUE) {
                               icon = icon("chart-bar")
                               ),
 
-                     tabPanel(title=HTML("</a></li><li><a href='https://tim-b90.github.io/mvpaShiny_documentation/' target='_blank'><b>&#128214; Online documentation</b>"))
+                     tabPanel(title=HTML("</a></li><li><a href='https://liningtonlab.github.io/mvpaShiny_documentation/' target='_blank'><b>&#128214; Online documentation</b>"))
                      )
 
 

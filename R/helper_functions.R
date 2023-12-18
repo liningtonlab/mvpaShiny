@@ -44,6 +44,16 @@ get_selected_dataset <- function(selected_dataset, valid_datasets) {
 
 }
 
+# Parse principal component number from PC1 notation
+get_pc_numeric <- function(pc_string) {
+
+    if (is.null(pc_string)) return()
+
+    number_from_string <- stringr::str_remove(pc_string, "PC")
+
+    return(as.integer(number_from_string))
+
+}
 
 # Trim dataframes for plotting
 adjust_decimals <- function(data, decimals = 3) {

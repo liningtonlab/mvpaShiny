@@ -717,7 +717,6 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
 
                plotly_helper(fig,filename)
 
-
             })
 
         })
