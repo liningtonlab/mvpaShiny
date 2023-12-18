@@ -14,7 +14,7 @@ if (!require("devtools", quietly = TRUE)) {
   print("Devtools has been already installed.")
 }
 
-devtools::install_github("liningtonlab/mvpa")    
+# The mvpa R package will be installed automatically  
 devtools::install_github("liningtonlab/mvpaShiny")
 ```
 
