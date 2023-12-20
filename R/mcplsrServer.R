@@ -612,13 +612,13 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
                                               choices = x_vals,
                                               multiple = TRUE),
 
-                               sliderInput(inputId = NS(id, "y_filter"),
-                                           label = "Trim target projection value",
-                                           min = min_y,
-                                           max = max_y,
-                                           value = c(min_y, max_y),
-                                           step = step_size,
-                                           round = FALSE)
+                               # sliderInput(inputId = NS(id, "y_filter"),
+                               #             label = "Trim target projection value",
+                               #             min = min_y,
+                               #             max = max_y,
+                               #             value = c(min_y, max_y),
+                               #             step = step_size,
+                               #             round = FALSE)
 
                                ),
 
