@@ -326,7 +326,9 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
 
             min_y <- floor(min_y)
             max_y <- ceiling(max_y)
-            x_vals <- data$value_to_plot
+            step_size <- (max_y - min_y) / 20
+
+            x_vals <- rownames(mcplsr$results$target_projection_A_opt$selectivity_ratio)
 
             output$tp_repeated_plot_options <- renderUI({
 
@@ -371,7 +373,8 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
                                        label = "Trim target projection value",
                                        min = min_y,
                                        max = max_y,
-                                       value = c(min_y, max_y))
+                                       value = c(min_y, max_y),
+                                       step = step_size)
 
                         ),
 
@@ -412,7 +415,7 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
 
             req(input$tp_repeated_val_type)
             mcplsr$tp_repeated_val_type <- input$tp_repeated_val_type
-            x_vals <- colnames(mcplsr$results$tested_components$component_1$selectivity_ratio)
+            x_vals <- rownames(mcplsr$results$target_projection_A_opt$selectivity_ratio)
 
             updateSelectizeInput(session = session,
                                  inputId = "x_filter_repeated",
@@ -437,12 +440,14 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
 
                     min_y <- floor(min_y)
                     max_y <- ceiling(max_y)
+                    step_size = (max_y - min_y) / 20
 
                     updateSliderInput(session = session,
                                       inputId = "y_filter_repeated",
                                       min = min_y,
                                       max = max_y,
-                                      value = c(min_y, max_y))
+                                      value = c(min_y, max_y),
+                                      step = step_size)
 
                 }
             }
@@ -570,6 +575,7 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
 
                 min_y <- floor(min_y)
                 max_y <- ceiling(max_y)
+                step_size = (max_y - min_y) / 20
 
                 x_vals <- rownames(mcplsr$results$target_projection_A_opt$selectivity_ratio)
 
@@ -587,8 +593,8 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
                                                                HTML("<b>TP loadings</b> (pTP)"),
                                                                HTML("<b>Selectivity ratio</b> (explained/<i>residual</i> variance of the predicted outcome)"),
                                                                HTML("<b>Selectivity fraction</b> (explained/<i>total</i> variance of the predicted outcome"),
-                                                               HTML("<b>Multivariate correlation coefficient 1</b> (<i>standardized</i> association with the actual outcome)"),
-                                                               HTML("<b>Multivariate covariance coefficient 2</b> (<i>unstandardized</i> association with the actual outcome)")),
+                                                               HTML("<b>Multivariate correlation coefficient</b> (<i>standardized</i> association with the actual outcome)"),
+                                                               HTML("<b>Multivariate covariance coefficient</b> (<i>unstandardized</i> association with the actual outcome)")),
                                             choiceValues = c("wTP",
                                                              "tTP",
                                                              "pTP",
@@ -611,6 +617,7 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
                                            min = min_y,
                                            max = max_y,
                                            value = c(min_y, max_y),
+                                           step = step_size,
                                            round = FALSE)
 
                                ),
@@ -683,13 +690,14 @@ mcplsrServer <- function(id, valid_datasets, selected_valid_dataset, current_dat
             min_y <- floor(min_y)
             max_y <- ceiling(max_y)
 
+            step_size = (max_y - min_y) / 20
+
             updateSliderInput(session = session,
                               inputId = "y_filter",
                               min = min_y,
                               max = max_y,
-                              value = c(min_y, max_y))
-
-
+                              value = c(min_y, max_y),
+                              step = step_size)
 
         }, priority = 2)
 
